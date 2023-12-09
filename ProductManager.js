@@ -1,11 +1,16 @@
+const fs = require("fs").promises;
+
 class ProductManager {
     static lastId = 0;
 
-    constructor() {
+    constructor(path) {
         this.products = [];
+        this.path = path;
     }
 
-    addProduct(title, description, price, thumbnail, code, stock) {
+    async addProduct(newProduct) {
+
+        let { title, description, price, thumbnail, code, stock } = newProduct;
 
         if (!title || !description || !price || !thumbnail || !code || !stock) {
             console.log("Los datos no pueden estar vacios");
@@ -26,23 +31,77 @@ class ProductManager {
             stock
         }
         this.products.push(product);
-        console.log("Producto agregado:", product);
+        await this.saveFile();
     }
 
-    getProducts() {
+    async getProducts() {
+        await this.readFile();
         return this.products;
     }
 
-    getProductById(id) {
+    async getProductById(id) {
+        await this.readFile();
         const product = this.products.find(item => item.id === id);
 
         if (!product) {
-            console.log("Product not found");
-        } else {
-            console.log("Product:", product);
+            console.log("Producto no encontrado");
+            return;
         }
         return product;
     }
+
+    async readFile() {
+        try {
+            const data = await fs.readFile(this.path, "utf-8");
+            this.products = JSON.parse(data);
+
+        } catch (error) {
+            console.log("Error al leer archivo:", error);
+        }    
+    }
+
+    async saveFile() {
+        try {
+            const data = JSON.stringify(this.products, null, 2);
+            await fs.writeFile(this.path, data);
+            console.log("Productos Guardados");
+
+        } catch (error) {
+            console.log("Error al guardar archivo:", error);
+        }    
+    
+    }
+
+    async updateProduct(id, newData) {
+        await this.readFile();
+        const index = this.products.findIndex(item => item.id === id);
+
+        if (index === -1) {
+            console.log("Producto no encontrado");
+            return;
+        }
+
+        const product = this.products[index];
+        const updatedProduct = { ...product, ...newData };
+        this.products[index] = updatedProduct;
+        await this.saveFile();
+        return updatedProduct;    
+    }
+
+    async deleteProduct(id) {
+        await this.readFile();
+        const index = this.products.findIndex(item => item.id === id);
+
+        if (index === -1) {
+            console.log("Producto no encontrado");
+            return;
+        }
+
+        this.products.splice(index, 1);
+        await this.saveFile();
+        return this.products;    
+    }
+
 }
 
 
