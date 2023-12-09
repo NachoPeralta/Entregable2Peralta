@@ -6,6 +6,7 @@ class ProductManager {
     constructor(path) {
         this.products = [];
         this.path = path;
+        this.saveFile();
     }
 
     async addProduct(newProduct) {
