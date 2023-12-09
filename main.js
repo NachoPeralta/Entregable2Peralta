@@ -88,6 +88,57 @@ async function run() {
     console.log("Llamada a deleteProduct 1:");
     console.log(await productManager.deleteProduct(1));
     console.log("*********************************************");
+
+    // Pruebo agregar varios productos para probar generar los id automáticos sin repetirse.    
+    let p1 = {
+        title: "producto prueba 1",
+        description: "Este es un producto prueba",
+        price: 200,
+        thumbnail: "Sin imagen",
+        code: "abc1",
+        stock: 25
+    };
+    let p2 = {
+        title: "producto prueba 2",
+        description: "Este es un producto prueba",
+        price: 200,
+        thumbnail: "Sin imagen",
+        code: "abc2",
+        stock: 25
+    };
+    let p3 = {
+        title: "producto prueba 3",
+        description: "Este es un producto prueba",
+        price: 200,
+        thumbnail: "Sin imagen",
+        code: "abc3",
+        stock: 25
+    };
+    let p4 = {
+        title: "producto prueba 4",
+        description: "Este es un producto prueba",
+        price: 200,
+        thumbnail: "Sin imagen",
+        code: "abc4",
+        stock: 25
+    };
+    let p5 = {
+        title: "producto prueba 5",
+        description: "Este es un producto prueba",
+        price: 200,
+        thumbnail: "Sin imagen",
+        code: "abc5",
+        stock: 25
+    };
+
+    await productManager.addProduct(p1);
+    await productManager.addProduct(p2);
+    await productManager.addProduct(p3);
+    await productManager.addProduct(p4);
+    await productManager.addProduct(p5);
+    await getProductData();
+    
+    console.log("*********************************************");
 }
 
 run();
